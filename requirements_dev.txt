@@ -10,3 +10,7 @@ twine==1.14.0
 Click==7.0
 pytest==4.6.5
 pytest-runner==5.1
+lxml==4.6.2
+halo==0.0.31
+scikit-image==0.18.1
+
