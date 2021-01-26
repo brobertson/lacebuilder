@@ -4,6 +4,11 @@ include HISTORY.rst
 include LICENSE
 include README.rst
 
+recursive-include lacebuilder/Dictionaries *
+recursive-include lacebuilder/static_for_image_xar *
+recursive-include lacebuilder/static_for_text_xar *
+recursive-include lacebuilder/XSLT *
+
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
