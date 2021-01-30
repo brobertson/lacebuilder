@@ -26,7 +26,7 @@ Lacebuilder is a friendly command-line application that generates packages for t
 Features
 --------
 
-* Gemerates a base image package for all derived OCR runs, binarizing all images
+* Generates a base image package for all derived OCR runs, binarizing all images
 * Generates OCR output packages with the enhanced data used to make editing OCR easy in Lace, including word spellcheck status and dehyphenation
 * Automatically corrects the word bounding boxes of kraken hOCR output
 
