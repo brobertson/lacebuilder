@@ -138,7 +138,8 @@ def generate_hocr_xar(
 
     if not (imagexarfile == None):
         try:
-            print("archive is:", imagexarfile)
+            if verbose:
+                print("archive is:", imagexarfile)
             archive = ZipFile(imagexarfile.name, "r")
             metadata = archive.read("meta.xml")
             root = ET.fromstring(metadata)

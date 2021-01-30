@@ -168,10 +168,10 @@ def strip_accents(stringIn):
 
 
 def in_dict(dictionary,word):
-    from greek_tools import split_text_token
+    from .greek_tools import split_text_token
     return split_text_token(word)[1].replace('\'','’') in dictionary
 
 
 def in_dict_lower(dictionary,word):
-    from greek_tools import split_text_token
+    from .greek_tools import split_text_token
     return split_text_token(word)[1].replace('\'','’').lower() in dictionary
