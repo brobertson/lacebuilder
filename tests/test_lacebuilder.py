@@ -8,6 +8,7 @@ from click.testing import CliRunner
 
 from lacebuilder import lacebuilder
 from lacebuilder import cli
+from lacebuilder import greek_tools
 
 
 @pytest.fixture
@@ -31,7 +32,20 @@ def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
-    assert 'lacebuilder.cli.main' in result.output
+    #assert 'lacebuilder.cli.main' in result.output
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
-    assert '--help  Show this message and exit.' in help_result.output
+    assert 'packimages' in help_result.output
+
+def test_greek_tools_identify_greek_chars():
+    assert greek_tools.is_greek_char('β')
+    assert greek_tools.is_greek_char('ῇ')
+
+def test_greek_tools_identify_greek_string():
+    assert greek_tools.is_greek_string('μαχ(οῦμαι)')
+
+def test_greek_tools_preprocess_words():
+    assert greek_tools.preprocess_word('δ\'') == 'δ’'
+
+def test_greek_tools_strip_accents():
+    assert greek_tools.strip_accents('ἐχθρῶν') == 'εχθρων'
