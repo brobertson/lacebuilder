@@ -16,7 +16,7 @@ Lacebuilder
 
 
 
-Lacebuilder is a friendly command-line application that generates packages for the [Lace](https://github.com/brobertson/Lace2) in-browser OCR to TEI web editing application. You point it to your image directory and your hOCR output directory, as well as to a simple xml metadata file, and it produces the .xar packages that can be installed in Lace through eXist-db's drag-and-drop package manager.
+Lacebuilder is a friendly command-line application that generates packages for the `Lace <https://github.com/brobertson/Lace2>`_ in-browser OCR to TEI web editing application. You point it to your image directory and your hOCR output directory, as well as to a simple xml metadata file, and it produces the .xar packages that can be installed in Lace through eXist-db's drag-and-drop package manager.
 
 
 * Free software: BSD license
