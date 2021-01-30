@@ -16,7 +16,7 @@ Lacebuilder
 
 
 
-Lacebuilder is a friendly command-line application that generates packages for the `Lace <https://github.com/brobertson/Lace2>`_ in-browser OCR to TEI web editing application. You point it to your image directory and your hOCR output directory, as well as to a simple xml metadata file, and it produces the .xar packages that can be installed in Lace through eXist-db's drag-and-drop package manager.
+Lacebuilder is a friendly command-line application that generates packages for the `Lace <https://github.com/brobertson/Lace2>`_ in-browser OCR to TEI web editing application. Point it to an image directory and corresponding hOCR output directory, as well as to a simple xml metadata file, and it produces the .xar packages that can be installed in Lace through eXist-db's drag-and-drop package manager.
 
 
 * Free software: BSD license
@@ -26,9 +26,26 @@ Lacebuilder is a friendly command-line application that generates packages for t
 Features
 --------
 
-* Gemerates a base image package for all derived OCR runs
+* Gemerates a base image package for all derived OCR runs, binarizing all images
 * Generates OCR output packages with the enhanced data used to make editing OCR easy in Lace, including word spellcheck status and dehyphenation
 * Automatically corrects the word bounding boxes of kraken hOCR output
+
+Examples
+~~~~~~~~
+
+Building an image package:
+
+::
+
+    lacebuilder --outputdir /home/brucerob/ --metadatafile ~/Test_Lacebuilder/552464779_meta.xml packimages  --imagedir ~/Test_Tarantella/test outputdir: /home/brucerob/
+    generating image xar archive
+    Binarizing and compressing images
+    image archive of 111 images saved to /home/brucerob/552464779_images.xar"
+    
+Building an hOCR output text package:
+
+
+
 
 Credits
 -------
