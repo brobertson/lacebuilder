@@ -184,7 +184,7 @@ def preprocess_word(word):
     other_circumflex = str("\N{COMBINING CIRCUMFLEX ACCENT}")
     greek_koronis = str("\N{GREEK KORONIS}")
     smooth_breathing = str("\N{COMBINING COMMA ABOVE}")
-    apostrophe = "’"  # unicode(u"\N{APOSTROPHE}")
+    apostrophe = "’"  #right single quotation mark 2019
     mod_apostrophe = str("\N{MODIFIER LETTER APOSTROPHE}")
     right_single_quote = str("\N{RIGHT SINGLE QUOTATION MARK}")
     real_apostrophe = str("\N{APOSTROPHE}")
