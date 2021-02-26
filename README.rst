@@ -56,8 +56,8 @@ More information is required to build an hOCR output text package because Lace u
 
 Example Including Archive.org Files and Tesseract Processing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 Here is a sequence of bash commands that convert a meta.xml file and zip archive of jp2 image files into Lace packages::
+
     mkdir /tmp/Pliny
     cd /tmp/Pliny/
     mv ~/Downloads/epistularumlibr00plin_* ./
