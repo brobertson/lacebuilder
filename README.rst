@@ -54,6 +54,23 @@ More information is required to build an hOCR output text package because Lace u
     writing this data to  /tmp/tmpo0_6nin6total.xml
     text archive from date 2021-01-30-16-05-42 saved to /home/brucerob/552464779-2021-01-30-16-05-42-porson_2020-10-10-11-54-25_best-texts.xar
 
+Example Including Archive.org Files and Tesseract Processing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a sequence of bash commands that convert a meta.xml file and zip archive of jp2 image files into Lace packages::
+    mkdir /tmp/Pliny
+    cd /tmp/Pliny/
+    mv ~/Downloads/epistularumlibr00plin_* ./
+    unzip epistularumlibr00plin_jp2.zip
+    cd epistularumlibr00plin_jp2/
+    parallel -P 6 opj_decompress -i  {} -o {.}.png ::: *jp2
+    mkdir epistularumlibr00plin_png
+    mv *png epistularumlibr00plin_png/
+    mkdir epistularumlibr00plin_hocr
+    parallel  -P 6  "tesseract   -l lat  {}  epistularumlibr00plin_hocr/{/.} hocr" ::: epistularumlibr00plin_png/*png
+    lacebuilder --outputdir . --metadatafile epistularumlibr00plin_meta.xml  packimages --imagedir epistularumlibr00plin_jp2/epistularumlibr00plin_png/
+    lacebuilder --outputdir . --metadatafile epistularumlibr00plin_meta.xml  packtexts --imagexarfile epistularumlibr00plin_images.xar --hocrdir epistularumlibr00plin_jp2/epistularumlibr00plin_hocr/ --ocr-engine tesseract --classifier lat --verbose
+    
 
 Credits
 -------
