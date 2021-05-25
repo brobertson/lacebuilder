@@ -147,7 +147,8 @@ def makeAccuracySVG(hocrPath, imagesXar):
                 fill = "hsl(0, 0%, 86%)"  # light grey
             svg_rect = """<svg:a xmlns:svg='http://www.w3.org/2000/svg'
                     href="side_by_side_view.html?positionInCollection={}">
-                <svg:rect data-doc-name="{}" x="{}" y="0" width="{}" height="{}" style="fill:{}">
+                <svg:rect data-doc-name="{}" x="{}" y="0" 
+                    width="{}" height="{}" style="fill:{}">
                     <svg:title>{}</svg:title>
                 </svg:rect>
             </svg:a>""".format(
@@ -160,7 +161,6 @@ def makeAccuracySVG(hocrPath, imagesXar):
                 str(count),
             )
             svg_root.append(etree.XML(svg_rect))
-    # print(str(etree.tostring(tree.getroot(), encoding='unicode', method='xml')))
     with open(os.path.join(hocrPath, "accuracyReport.svg"), "w") as text_file:
         text_file.write(
             str(etree.tostring(tree.getroot(), encoding="unicode", method="xml"))

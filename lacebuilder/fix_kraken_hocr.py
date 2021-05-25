@@ -163,7 +163,7 @@ def get_word_span_area(treeIn, verbose):
             namespaces={"html": "http://www.w3.org/1999/xhtml"},
         )[0]
     )
-    if (verbose):
+    if verbose:
         print("image area: {}".format(image_area))
     for span in word_spans:
         area = get_bbox_area(span)

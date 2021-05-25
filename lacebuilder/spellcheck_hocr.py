@@ -11,8 +11,10 @@ import os
 if __name__ == "__main__":
     spellcheck(sys.argv[1], sys.argv[2], sys.argv[3], True)
 
-def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose): 
+
+def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
     import unicodedata
+
     spellcheck_dict = {}
     euro_sign = str("\N{EURO SIGN}")
     if not os.path.isdir(dir_in_path) or not os.path.isdir(dir_out_path):
@@ -25,9 +27,12 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
             # omit comment lines from processing
             if not (line[0] == "#"):
                 try:
-                    [original_form, replacement, frequency, spellcheck_mode] = line.split(
-                        euro_sign
-                    )
+                    [
+                        original_form,
+                        replacement,
+                        frequency,
+                        spellcheck_mode,
+                    ] = line.split(euro_sign)
                     # print original_form, replacement, spellcheck_mode
                     if spellcheck_mode != "False":
                         spellcheck_dict[unicodedata.normalize("NFC", original_form)] = (
@@ -37,14 +42,14 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                         )
                 except ValueError:
                     print(
-                        "line '", line, "' could not be processed, skipping and continuing"
+                        "line '",
+                        line,
+                        "' could not be processed, skipping and continuing",
                     )
                     continue
-    if (verbose):
+    if verbose:
         print("dictionary length: ", len(spellcheck_dict))
         print("reading dir ", dir_in_path)
-
-
 
     for file_name in os.listdir(dir_in_path):
         if file_name.endswith(".html"):
@@ -54,7 +59,7 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
             fileIn_name = os.path.join(dir_in_path, file_name)
             fileOut_name = os.path.join(dir_out_path, simplified_name)
             fileIn = codecs.open(fileIn_name, "r", "utf-8")
-            if (verbose):
+            if verbose:
                 print("checking", fileIn_name, "sending to ", fileOut_name)
             try:
                 treeIn = etree.parse(fileIn)
@@ -73,7 +78,7 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                 )
                 for word_element in filtered_hocr_word_elements:
                     dhf = word_element.get("data-dehyphenatedform")
-                    if (verbose):
+                    if verbose:
                         print("dehyph form", dhf)
                     hyphenated_form = False
                     if dhf == None:
@@ -90,17 +95,17 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                             word = unicodedata.normalize("NFC", dhf)
                         except TypeError:
                             word = unicodedata.normalize("NFC", str(dhf))
-                        if (verbose):
+                        if verbose:
                             print("a hyhpenated word:", word)
                         hyphenated_form = True
                     try:
-                        if (verbose):
+                        if verbose:
                             print("Word:", word)
                         parts = split_text_token(word)
-                        if (verbose):
+                        if verbose:
                             print("Parts:", parts)
                         error_word = preprocess_word(parts[1])
-                        if (verbose):
+                        if verbose:
                             print("an error word:", error_word)
                         (replacement, frequency, spellcheck_mode) = spellcheck_dict[
                             error_word
@@ -108,10 +113,10 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                         if spellcheck_mode == "True" or spellcheck_mode == "TrueLower":
                             replacement = parts[1]
                         # if there is no entry, then we will throw a Key Error and not do any of this:
-                        if (verbose):
+                        if verbose:
                             print(replacement, frequency, spellcheck_mode)
                         parts = (parts[0], replacement, parts[2])
-                        if (verbose):
+                        if verbose:
                             print("replaced", error_word, "with", replacement)
                         # dump(parts[1])
                         output = parts[0] + parts[1] + parts[2]
@@ -142,7 +147,7 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                                     end_id,
                                     "has",
                                     len(hyphen_end_element),
-                                    "exiting..."
+                                    "exiting...",
                                 )
                                 exit()
                         elif spellcheck_mode == "PunctStrip":
@@ -155,7 +160,7 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                         if word != output:
                             word_element.set("data-pre-spellcheck", word)
                     except KeyError:
-                        if (verbose):
+                        if verbose:
                             print("oops had a key error")
                         if error_word == "":
                             word_element.set("data-spellcheck-mode", "Numerical")
@@ -164,5 +169,5 @@ def spellcheck(spellcheck_file_path, dir_in_path, dir_out_path, verbose):
                     word_element.set("data-selected-form", word_element.text)
                     word_element.set("data-manually-confirmed", "false")
                     treeIn.write(fileOut_name, encoding="UTF-8", xml_declaration=True)
-            except Exception  as e:
+            except Exception as e:
                 print("failed to parse due to:", e)

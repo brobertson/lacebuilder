@@ -12,14 +12,16 @@ from .greek_tools import (
     is_greek_char,
     is_greek_string,
 )
-#I think this is not used, and we have the function below
-#from read_dict5 import makeDict
+
+# I think this is not used, and we have the function below
+# from read_dict5 import makeDict
 import lxml
 from lxml import etree
 import re
 import os
 import codecs
 import unicodedata
+
 
 def add_word(word_count, word):
 
@@ -36,7 +38,10 @@ def add_word(word_count, word):
 
 
 def get_hocr_words(treeIn, word_count):
-    words = treeIn.xpath("//html:span[@class='ocr_word'] | //span[@class='ocr_word']", namespaces={"html": "http://www.w3.org/1999/xhtml"},)
+    words = treeIn.xpath(
+        "//html:span[@class='ocr_word'] | //span[@class='ocr_word']",
+        namespaces={"html": "http://www.w3.org/1999/xhtml"},
+    )
     # word_count = {}
     for word in words:
         dhf = word.get("data-dehyphenatedform")
@@ -68,7 +73,7 @@ def makeDict(fileName, migne_mode=False):
             (word, freq) = line.split(",")
         except ValueError:
             word = line
-            freq = '5'
+            freq = "5"
         freq = int(freq.rstrip("\r\n"))
         if freq > frequency_limit:
             word_prep = preprocess_word(word.rstrip("\n\r\x11"))
@@ -104,14 +109,22 @@ def findOccurences(s, ch):
 
 
 def bothHalvesInDict(my_dict, str1, str2):
-    return ((str1 in my_dict) or in_dict_lower(my_dict, str1)) and ((str2 in my_dict) or in_dict_lower(my_dict, str2))
+    return ((str1 in my_dict) or in_dict_lower(my_dict, str1)) and (
+        (str2 in my_dict) or in_dict_lower(my_dict, str2)
+    )
 
 
-def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_dict_file_path, output_file_path, verbose):
+def make_spellcheck_file(
+    input_directory_path,
+    dictionary_file_path,
+    no_accent_dict_file_path,
+    output_file_path,
+    verbose,
+):
     superscripts = "\u00B2\u00B3\u00B9\u2070\u2074\u2075\u2076\u2077\u2078\u2079"
 
     try:
-        output_file_handle = open(output_file_path, 'w')
+        output_file_handle = open(output_file_path, "w")
         dir_in = input_directory_path
         # print dir_in
         dir_in_list = os.listdir(dir_in)
@@ -119,7 +132,7 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
     except (IndexError, ValueError) as e:
         print(e)
         exit()
-    if (verbose):
+    if verbose:
         print("# making dicts")
     import time
 
@@ -129,7 +142,7 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
     minutes = dict_time / 60.0
     my_dict = set(my_dict)
     no_accent_dict = makeNoAccentDict(no_accent_dict_file_path)
-    if (verbose):
+    if verbose:
         print("# dict building took", minutes, " minutes.")
     marker = "€"
 
@@ -152,7 +165,7 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
                 treeIn = etree.parse(fileIn)
                 get_hocr_words(treeIn, word_count)
             except (lxml.etree.XMLSyntaxError):
-                if (verbose):
+                if verbose:
                     print("XMLSyntaxError on printing " + simplified_name)
                 pass
 
@@ -187,18 +200,24 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
             else:
                 split_on_punct = punct_re.split(w)
                 if bothHalvesInDict(my_dict, split_on_punct[0], split_on_punct[2]):
-                    output = split_on_punct[0] + split_on_punct[1] + " " + split_on_punct[2]
+                    output = (
+                        split_on_punct[0] + split_on_punct[1] + " " + split_on_punct[2]
+                    )
                     operation = "SplitOnPunct"
 
         if operation == "False":
-            split = re.split(marker, re.sub("([" + terminal_chars + "])", r"\1" + marker, w))
+            split = re.split(
+                marker, re.sub("([" + terminal_chars + "])", r"\1" + marker, w)
+            )
             if len(split) > 1:
                 output = ""
                 operation = "Split"
                 for component in split:
                     if component != "":
                         if not (component in my_dict):
-                            no_accent_component = inNoAccentDict(component, no_accent_dict)
+                            no_accent_component = inNoAccentDict(
+                                component, no_accent_dict
+                            )
                             if no_accent_component:
                                 output = output + " " + no_accent_component
                                 operation = "SplitNoAcc"
@@ -213,13 +232,27 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
 
         if operation == "False":
             try:
-                digit_groups = re.match('(^[·«„\[\("〈]*)([I\d' + superscripts + "]*?)([«»„.,!?;†·:〉\)\]" + "]*$)", w, re.UNICODE,).groups()
-                output = digit_groups[0] + re.sub("I", "1", digit_groups[1]) + digit_groups[2]
+                digit_groups = re.match(
+                    '(^[·«„\[\("〈]*)([I\d'
+                    + superscripts
+                    + "]*?)([«»„.,!?;†·:〉\)\]"
+                    + "]*$)",
+                    w,
+                    re.UNICODE,
+                ).groups()
+                output = (
+                    digit_groups[0]
+                    + re.sub("I", "1", digit_groups[1])
+                    + digit_groups[2]
+                )
                 operation = "Numerical"
             except:
                 pass
         for a_suffix in latin_suffixes:
-            if w.endswith(a_suffix) and (w[: -1 * len(a_suffix)] in my_dict or in_dict_lower(my_dict, w[: -1 * len(a_suffix)])):
+            if w.endswith(a_suffix) and (
+                w[: -1 * len(a_suffix)] in my_dict
+                or in_dict_lower(my_dict, w[: -1 * len(a_suffix)])
+            ):
                 operation = "True"
         ##    if operation=="False" and re.match(u'[^\w\s]+',w,re.UNICODE):
         ##        operation = "Punctuation"
@@ -327,7 +360,12 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
                 ["O", ["Ο", "0"]],
                 ["0", ["O", "Ο"]],
                 ["P", ["Ῥ", "Ρ"]],
-                ["Ρ", ["Ῥ",]],
+                [
+                    "Ρ",
+                    [
+                        "Ῥ",
+                    ],
+                ],
                 ["R", ["H"]],
                 ["Q", ["O"]],
                 ["T", ["Τ", "Γ"]],
@@ -392,7 +430,9 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
                             except UnicodeDecodeError as e:
                                 print(e, w, replacement)
                             break
-                        elif inNoAccentDict(sub_attempt, no_accent_dict) and (len(sub_attempt) > 4 or w[0].isupper()):
+                        elif inNoAccentDict(sub_attempt, no_accent_dict) and (
+                            len(sub_attempt) > 4 or w[0].isupper()
+                        ):
                             output = inNoAccentDict(sub_attempt, no_accent_dict)
                             try:
                                 operation = "SubNoAcc " + subst[0] + "->" + replacement
@@ -414,7 +454,9 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
             l = len(w)
             half = int(l / 2)
             for pointer in range(1, half - 3):
-                if bothHalvesInDict(my_dict, w[: half - pointer + 1], w[half - pointer + 1 :]):
+                if bothHalvesInDict(
+                    my_dict, w[: half - pointer + 1], w[half - pointer + 1 :]
+                ):
                     operation = "True"
                     output = w[: half - pointer + 1] + " " + w[half - pointer + 1 :]
                     break
@@ -422,7 +464,16 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
                     output = w[: pointer + half] + " " + w[pointer + half :]
                     operation = "True"
                     break
-        output_file_handle.write(w + marker + output + marker + str(word_count[w]) + marker + operation + '\n')
+        output_file_handle.write(
+            w
+            + marker
+            + output
+            + marker
+            + str(word_count[w])
+            + marker
+            + operation
+            + "\n"
+        )
         # print "# ", str(100.0 * count / total), "complete"
         # output_array.append((w,output,word_count[w],operation))
         if operation != "False":
@@ -441,22 +492,23 @@ def make_spellcheck_file(input_directory_path, dictionary_file_path, no_accent_d
             counts[operation] = word_count[w]
             biomass[operation] = word_count[w] * len(w)
     output_file_handle.close()
-    if (verbose):
+    if verbose:
         print("Total words:", total_count)
     # print >> sys.stderr, counts
     total_fixed = 0
     total_biomass_fixed = 0
     for out in sorted(counts, key=counts.get, reverse=True):
-        if (verbose):
+        if verbose:
             print(out, counts[out], file=sys.stderr)
         if not out == "False":
             total_fixed = total_fixed + counts[out]
             total_biomass_fixed = total_biomass_fixed + biomass[out]
     try:
-        if (verbose):
+        if verbose:
             print("Total fixed by spellcheck: ", str(total_fixed))
             print("Percentage good:", str(total_fixed * 100.00 / total_count))
             print(
-                "Biomass correct: ", str(total_biomass_fixed * 100.00 / total_biomass))
+                "Biomass correct: ", str(total_biomass_fixed * 100.00 / total_biomass)
+            )
     except ZeroDivisionError:
         print("Total spellcheck count is ZERO???")
