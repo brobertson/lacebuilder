@@ -54,6 +54,7 @@ def generate_image_xar(image_dir, output_dir, metadata_file, verbose, clobber):
     for input_image_file in all_image_files:
         fileout_name = identifier + "_" + str(output_counter).zfill(4) + ".png"
         if verbose:
+            print("filein name: ", input_image_file)
             print("fileout name: ", fileout_name)
         fileout_path = os.path.join(temp_dir, fileout_name)
         binarize_skimage(input_image_file, fileout_path, verbose)
@@ -123,7 +124,7 @@ def generate_hocr_xar(
     identifier = ""
     repo_file_string = ""
 
-    #change classifier variable to be the name of the classifier, not path to the actual file
+    # change classifier variable to be the name of the classifier, not path to the actual file
     classifier = Path(classifier).stem
 
     if not (metadata_file == None):
@@ -133,7 +134,12 @@ def generate_hocr_xar(
         xslt = ET.parse(xsl_file_handle)
         dom = ET.parse(open(metadata_file.name, "r"))
         transform = ET.XSLT(xslt)
-        newdom = transform( dom, identifier=etree.XSLT.strparam(identifier), classifier=etree.XSLT.strparam(classifier), rundate=etree.XSLT.strparam(datetime))
+        newdom = transform(
+            dom,
+            identifier=etree.XSLT.strparam(identifier),
+            classifier=etree.XSLT.strparam(classifier),
+            rundate=etree.XSLT.strparam(datetime),
+        )
         repo_file_string = ET.tostring(newdom)
 
     if not (imagexarfile == None):
@@ -393,7 +399,7 @@ def generate_image_repo(metadata_file):
 
 def binarize_skimage(filein_path, fileout_path, verbose):
     # TODO: make regional otsu
-    import skimage
+    import skimage, sys
     from skimage import io
     from skimage.filters import threshold_otsu
 
@@ -401,6 +407,10 @@ def binarize_skimage(filein_path, fileout_path, verbose):
         print("input file to binarize: ", filein_path)
     try:
         image = io.imread(filein_path)
+    except ValueError:
+        print()
+        print("Image file " + filein_path + " could not be opened. It might be encoded with compression unsupported by standard Python libraries, such as CCITT and OJPEG compression. In this case, convert to png format and try again.")
+        sys.exit(1)
     except Exception as ex:
         print("raised exception trying to read: ", type(ex))
     try:
