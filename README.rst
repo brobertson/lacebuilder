@@ -30,6 +30,22 @@ Features
 * Generates OCR output packages with the enhanced data used to make editing OCR easy in Lace, including word spellcheck status and dehyphenation
 * Automatically corrects the word bounding boxes of kraken hOCR output
 
+Metadata File Specification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A metadata xml file is packaged with xar files and used to define various parameters. This conforms to the archive.org ``\*_meta.xml`` schema, using only the following elements: publisher, identifier, title, creator, date, and ppi. Thus a minimal meta.xml file could look like this::
+
+><metadata>
+>  <publisher>Lindauer</publisher>
+>  <identifier>247999034</identifier>
+>  <title>Aias: Tragödien des Sophokles</title>
+>  <creator>Wecklein, N.</creator>
+>  <date>1887</date>
+>  <ppi>400</ppi>
+></metadata>
+
+Its filename should use the identifier specified within. For example, the file listed above should be named ``247999034_meta.xml``.
+
 Examples
 ~~~~~~~~
 lacebuilder offers two subcommands, ``packimages`` and ``packtexts``. These have their own parameters. The parameters ``--outputdir`` and ``--metadatafile`` are common to both of the subcommands, so they are set before them. At present, you cannot chain the subcommands. To access the ``--help`` for the subcommands, you must properly set these output parameters, thus::
